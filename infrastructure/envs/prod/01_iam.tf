@@ -46,7 +46,7 @@ module "iam_github_oidc_role_app_repo" {
 
   name = "${var.project_name}-github-deploy-app-repo"
 
-  subjects = ["repo:susu10-10@75139663/online-boutique-aaws-pf@1315018332:ref:refs/heads/main"]
+  subjects = ["repo:susu10-10@75139663/online-boutique-app@1315018332:ref:refs/heads/main"]
 
   policies = {
     EcrDeployPolicy = aws_iam_policy.app_repo_policy.arn
@@ -202,7 +202,7 @@ module "iam_github_oidc_role_platform_repo" {
 
   name = "${var.project_name}-github-deploy-platform-repo"
 
-  subjects = ["repo:susu10-10@75139663/online-boutique-aaws-pf@1346081594:ref:refs/heads/main"]
+  subjects = ["repo:susu10-10@75139663/online-boutique-eks-pf@1346081594:ref:refs/heads/main"]
 
   policies = {
     PlatformDeployPolicy = aws_iam_policy.platform_repo_policy.arn
