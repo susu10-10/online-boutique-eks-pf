@@ -1,0 +1,54 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: boutique
+labels:
+- pairs:
+    app.kubernetes.io/part-of: online-boutique
+resources:
+- frontend.yaml
+- adservice.yaml
+- cartservice.yaml
+- checkoutservice.yaml
+- emailservice.yaml
+- paymentservice.yaml
+- productcatalogservice.yaml
+- recommendationservice.yaml
+- shippingservice.yaml
+- currencyservice.yaml
+- redis.yaml
+- network-policies
+
+# patches:
+# - patch: |-
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     metadata:
+#       name: all-deployments # Kustomize ignores this name and matches the target kind
+#     spec:
+#       template:
+#         spec:
+#           imagePullSecrets:
+#             - name: idpreg
+#   target:
+#     kind: Deployment
+# images:
+# - name: registry.digitalocean.com/idpreg/adservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/cartservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/checkoutservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/currencyservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/emailservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/frontend
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/paymentservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/productcatalogservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/recommendationservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+# - name: registry.digitalocean.com/idpreg/shippingservice
+#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
