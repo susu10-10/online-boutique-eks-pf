@@ -32,7 +32,7 @@ resource "aws_iam_policy" "app_repo_policy" {
           "ecr:ListImages",
           "ecr:ListTagsForResource"
         ]
-        Resource = "arn:aws:ecr:${var.aws_region}:${var.aws_account_id}:repository/online-boutique/*"
+        Resource = "arn:aws:ecr:${var.aws_region}:${var.aws_account_id}:repository/online-boutique-eks/*"
       }
     ]
   })
