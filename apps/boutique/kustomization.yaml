@@ -17,38 +17,37 @@ resources:
 - currencyservice.yaml
 - redis.yaml
 - network-policies
-
-# patches:
-# - patch: |-
-#     apiVersion: apps/v1
-#     kind: Deployment
-#     metadata:
-#       name: all-deployments # Kustomize ignores this name and matches the target kind
-#     spec:
-#       template:
-#         spec:
-#           imagePullSecrets:
-#             - name: idpreg
-#   target:
-#     kind: Deployment
-# images:
-# - name: registry.digitalocean.com/idpreg/adservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/cartservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/checkoutservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/currencyservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/emailservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/frontend
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/paymentservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/productcatalogservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/recommendationservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
-# - name: registry.digitalocean.com/idpreg/shippingservice
-#   newTag: sha-c904bf83d563b2b9bbf3ec99d583c7c2c1a400af
+images:
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/adservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/adservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/cartservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/cartservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/checkoutservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/checkoutservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/currencyservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/currencyservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/emailservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/emailservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/frontend
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/frontend
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/loadgenerator
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/loadgenerator
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/paymentservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/paymentservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/productcatalogservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/productcatalogservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/recommendationservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/recommendationservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
+- name: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/shippingservice
+  newName: 767397659229.dkr.ecr.us-east-1.amazonaws.com/online-boutique-eks/shippingservice
+  newTag: sha-cb4a3ca5b339854a850cc24f38048b17a2dea518
