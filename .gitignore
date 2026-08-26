@@ -310,4 +310,5 @@ grafana-cred.yaml
 
 mytree.txt
 
-terraform.tfstate
+terraform.tfstate*.tfstate
+*.tfstate.backup
