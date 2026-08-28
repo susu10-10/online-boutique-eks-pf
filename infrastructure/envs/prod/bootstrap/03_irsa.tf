@@ -22,7 +22,7 @@ module "alb_irsa" {
 
 module "ebs_csi_driver_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = "ebs-csi-driver"
 
