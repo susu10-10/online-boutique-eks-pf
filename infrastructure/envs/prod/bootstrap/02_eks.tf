@@ -14,13 +14,13 @@ module "eks" {
 
   # allow nodes to talk directl to the control plan internally
   endpoint_private_access = true
-  endpoint_public_access = true
+  endpoint_public_access  = true
 
   addons = {
     coredns                = {}
     eks-pod-identity-agent = {}
     kube-proxy             = {}
-    vpc-cni                = {
+    vpc-cni = {
       before_compute = true
     }
     aws-ebs-csi-driver = {
@@ -47,7 +47,7 @@ module "eks" {
 
   access_entries = {
     su_admin = {
-      principal_arn = "arn:aws:iam::767397659229:user/su-devsec"
+      principal_arn     = "arn:aws:iam::767397659229:user/su-devsec"
       kubernetes_groups = []
 
       policy_associations = {

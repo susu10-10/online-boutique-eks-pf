@@ -27,21 +27,21 @@ resource "helm_release" "argocd" {
   chart      = "argo-cd"
   version    = "10.2.1"
   namespace  = kubernetes_namespace_v1.argocd.metadata[0].name
-  values = [file("${path.module}/../../../../clusters/boutique/argocd/values.yaml")]
+  values     = [file("${path.module}/../../../../clusters/boutique/argocd/values.yaml")]
 
   set = [{
     name  = "server.insecure"
     value = "true" # TLS is handled at the ALB edge
   }]
-      depends_on = [ kubernetes_namespace_v1.argocd ]
+  depends_on = [kubernetes_namespace_v1.argocd]
 
-  }
+}
 
 
 # 3. Apply the Root App
 resource "kubectl_manifest" "root_app" {
   depends_on = [helm_release.argocd]
-  
+
   # Reads the root-app.yaml from your clusters directory
   yaml_body = file("../../../../clusters/boutique/argocd/root-app.yaml")
 }
