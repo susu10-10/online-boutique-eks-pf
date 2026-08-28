@@ -5,11 +5,11 @@ metadata:
   name: root-platform-app
   namespace: argocd
   finalizers:
-    - resources-finalizer.argocd.argoproj.io # deltes resources if root app is deleted
+    - resources-finalizer.argocd.argoproj.io # deletes resources if root app is deleted
 spec:
   project: default
   source:
-    repoURL: https://github.com/susu10-10/online-boutique-doks-pf
+    repoURL: https://github.com/susu10-10/online-boutique-eks-pf
     targetRevision: main
     path: clusters/boutique/infrastructure-apps # tells argo to scan this dir for child applications 
     directory:

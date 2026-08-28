@@ -72,8 +72,13 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "acm:DescribeCertificate",
           "acm:ListCertificates",
           "acm:ListTagsForCertificate",
+          "acm:RequestCertificate",
+          #"acm:UpdateCertificate",
+          "acm:AddTagsToCertificate",
+          "acm:RemoveTagsFromCertificate",
+          "acm:DeleteCertificate",
           "route53:GetHostedZone",
-          #"route53:ListHostedZones",
+          "route53:ListHostedZones",
           "route53:ChangeResourceRecordSets",
           "route53:ListResourceRecordSets",
           "route53:GetChange"
@@ -126,7 +131,9 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "logs:DescribeLogGroups",
           "logs:ListTagsLogGroup",
           "logs:DeleteLogGroup",
-          "logs:PutRetentionPolicy"
+          "logs:PutRetentionPolicy",
+          "logs:TagResource",
+          "logs:UntagResource"
         ]
         Resource = "arn:aws:logs:us-east-1:767397659229:log-group:*"
       },
@@ -141,11 +148,13 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "iam:PassRole", "iam:GetPolicy", "iam:GetPolicyVersion", "iam:CreatePolicy",
           "iam:DeletePolicy", "iam:CreatePolicyVersion", "iam:DeletePolicyVersion",
           "iam:ListPolicyVersions", "iam:GetOpenIDConnectProvider", "iam:TagRole",
+          "iam:UntagRole", "iam:TagPolicy", "iam:UntagPolicy",
           "iam:CreateInstanceProfile", "iam:DeleteInstanceProfile", "iam:AddRoleToInstanceProfile",
           "iam:RemoveRoleFromInstanceProfile", "iam:GetInstanceProfile",
           "iam:CreateOpenIDConnectProvider",
           "iam:DeleteOpenIDConnectProvider",
-          "iam:TagOpenIDConnectProvider"
+          "iam:TagOpenIDConnectProvider",
+          "iam:CreateServiceLinkedRole"
         ]
         Resource = [
           "arn:aws:iam::767397659229:role/*",
@@ -190,9 +199,36 @@ resource "aws_iam_policy" "platform_repo_policy" {
         Effect = "Allow"
         Action = [
           "kms:CreateGrant", "kms:DescribeKey", "kms:GenerateDataKey",
-          "kms:Decrypt", "iam:ListRoles", "ec2:Describe*"
+          "kms:Decrypt", "iam:ListRoles", "ec2:Describe*",
+          "kms:CreateKey", "kms:TagResource", "kms:UntagResource",
+          "kms:PutKeyPolicy", "kms:ScheduleKeyDeletion", "kms:EnableKeyRotation",
+          "kms:CreateAlias", "kms:UpdateAlias", "kms:DeleteAlias",
+          "kms:ListAliases"
         ]
         Resource = "*"
+      },
+      {
+        # 8. Route 53 zone discovery ListHostedZones/ListHostedZonesByName are
+        # list-type actions that AWS does not permit scoping to a resource ARN;
+        # they must be granted with Resource "*", separate from the
+        # ChangeResourceRecordSets/GetHostedZone statement above which IS scoped.
+        Effect = "Allow"
+        Action = [
+          "route53:ListHostedZones",
+          "route53:ListHostedZonesByName"
+        ]
+        Resource = "*"
+      },
+      {
+        # 9. EKS managed node group AMI lookup this reads AWS's own public SSM
+        # parameter namespace (note the empty account ID: arn:...:ssm:REGION::parameter/...),
+        # not your account's /online-boutique/* namespace granted in section 3.
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters"
+        ]
+        Resource = "arn:aws:ssm:us-east-1::parameter/aws/service/eks/optimized-ami/*"
       }
     ]
   })

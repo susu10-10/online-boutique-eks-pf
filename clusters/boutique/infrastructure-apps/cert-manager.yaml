@@ -16,7 +16,7 @@ spec:
       helm:
         valueFiles:
         - $values/clusters/boutique/platform-configs/helm-values/cert-manager.yaml
-    - repoURL: 'https://github.com/susu10-10/online-boutique-doks-pf'
+    - repoURL: 'https://github.com/susu10-10/online-boutique-eks-pf'
       targetRevision: main
       ref: values
   destination:

@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/clusters/boutique/platform-configs/helm-values/falco.yaml
 
-    - repoURL: https://github.com/susu10-10/online-boutique-doks-pf
+    - repoURL: https://github.com/susu10-10/online-boutique-eks-pf
       targetRevision: main
       ref: values
 

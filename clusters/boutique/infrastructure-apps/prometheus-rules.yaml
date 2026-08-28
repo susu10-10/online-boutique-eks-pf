@@ -10,10 +10,10 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://github.com/susu10-10/online-boutique-doks-pf
+    - repoURL: https://github.com/susu10-10/online-boutique-eks-pf
       targetRevision: main
       path: clusters/boutique/platform-configs/monitoring/recording-rules
-    - repoURL: https://github.com/susu10-10/online-boutique-doks-pf
+    - repoURL: https://github.com/susu10-10/online-boutique-eks-pf
       targetRevision: main
       path: clusters/boutique/platform-configs/monitoring/alerting-rules
 

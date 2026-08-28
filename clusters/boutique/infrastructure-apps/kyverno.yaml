@@ -16,7 +16,7 @@ spec:
       helm:
         valueFiles:
           - $values/clusters/boutique/platform-configs/helm-values/kyverno.yaml
-    - repoURL: 'https://github.com/susu10-10/online-boutique-doks-pf'
+    - repoURL: 'https://github.com/susu10-10/online-boutique-eks-pf'
       targetRevision: main
       ref: values
   destination:
@@ -44,7 +44,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/susu10-10/online-boutique-doks-pf'
+    repoURL: 'https://github.com/susu10-10/online-boutique-eks-pf'
     targetRevision: main
     path: 'clusters/boutique/platform-configs/kyverno/policies'
   destination:

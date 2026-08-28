@@ -8,7 +8,7 @@ metadata:
 spec:
   description: "Online Boutique project"
   sourceRepos:
-    - 'https://github.com/susu10-10/online-boutique-doks-pf'
+    - 'https://github.com/susu10-10/online-boutique-eks-pf'
   destinations:
     - namespace: boutique
       server: https://kubernetes.default.svc

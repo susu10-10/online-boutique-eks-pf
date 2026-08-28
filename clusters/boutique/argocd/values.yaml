@@ -7,7 +7,7 @@ configs:
     server.insecure: true
   cm:
     repositories: |
-      - url: https://github.com/susu10-10/online-boutique-doks-pf
+      - url: https://github.com/susu10-10/online-boutique-eks-pf
         type: git
         name: boutique-infra
 

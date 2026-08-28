@@ -1,0 +1,80 @@
+name: Terraform EKS Cluster
+
+on:
+#   push:
+#     branches: [ main ]
+#     paths:
+#       - 'infrastructure/envs/prod/cluster/**'
+#       - '.github/workflows/eks-cluster.yml'
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-eks-bootstrap:
+    name: Provision EKS Hardware
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: infrastructure/envs/prod/bootstrap/
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/online-boutique-eks-github-deploy-platform-repo
+          aws-region: ${{ env.AWS_REGION }}
+        
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.15.6"
+          
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Run Trivy vulnerability scanner in IaC mode
+        uses: aquasecurity/trivy-action@v0.36.0
+        env:
+          TRIVY_TF_EXCLUDE_DOWNLOADED_MODULES: 'true'
+        with:
+          scan-type: 'config'
+          hide-progress: false
+          format: 'table'
+          scan-ref: 'infrastructure/envs/prod/bootstrap/'
+          skip-dirs: 'infrastructure/envs/prod/bootstrap/.terraform'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL'
+
+      - name: Checkov Static Code Analysis
+        uses: bridgecrewio/checkov-action@v12.2982.0
+        with:
+          directory: infrastructure/envs/prod/bootstrap/
+          framework: terraform
+          soft_fail: false
+          download_external_modules: false
+          skip_check: CKV_TF_1
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false
+
+  

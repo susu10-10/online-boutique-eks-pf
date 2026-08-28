@@ -10,7 +10,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/susu10-10/online-boutique-doks-pf
+    repoURL: https://github.com/susu10-10/online-boutique-eks-pf
     targetRevision: main
     path: clusters/boutique/platform-configs/monitoring/servicemonitors
 

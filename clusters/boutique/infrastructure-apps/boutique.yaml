@@ -10,7 +10,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/susu10-10/online-boutique-doks-pf' #the git repo to watch
+    repoURL: 'https://github.com/susu10-10/online-boutique-eks-pf' #the git repo to watch
     targetRevision: main
     path: apps/boutique # the folder inside the repo where the manifest files are in
   destination:

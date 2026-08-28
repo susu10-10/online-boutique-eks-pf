@@ -12,11 +12,17 @@ module "eks" {
   # Optional: Adds the current caller identity (terraform) as an administrator via cluster access entry
   enable_cluster_creator_admin_permissions = true
 
+  # allow nodes to talk directl to the control plan internally
+  endpoint_private_access = true
+  endpoint_public_access = true
+
   addons = {
     coredns                = {}
     eks-pod-identity-agent = {}
     kube-proxy             = {}
-    vpc-cni                = {}
+    vpc-cni                = {
+      before_compute = true
+    }
     aws-ebs-csi-driver = {
       service_account_role_arn = module.ebs_csi_driver_irsa.arn
     }
@@ -36,6 +42,22 @@ module "eks" {
       min_size     = 1
       max_size     = 2
       desired_size = 1
+    }
+  }
+
+  access_entries = {
+    su_admin = {
+      principal_arn = "arn:aws:iam::767397659229:user/su-devsec"
+      kubernetes_groups = []
+
+      policy_associations = {
+        su_admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
     }
   }
 
