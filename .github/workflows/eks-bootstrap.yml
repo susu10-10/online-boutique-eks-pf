@@ -54,6 +54,7 @@ jobs:
           hide-progress: false
           format: 'table'
           scan-ref: 'infrastructure/envs/prod/bootstrap/'
+          skip-dirs: 'infrastructure/envs/prod/bootstrap/.terraform'
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL'
