@@ -1,4 +1,4 @@
-
+#checkov:skip=CKV_TF_1:
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 6.0"

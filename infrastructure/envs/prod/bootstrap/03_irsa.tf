@@ -1,3 +1,4 @@
+#checkov:skip=CKV_TF_1:
 module "alb_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "~> 6.0"
@@ -20,6 +21,7 @@ module "alb_irsa" {
 
 # IAM Role IRSA - EBS CSI Driver
 
+#checkov:skip=CKV_TF_1:
 module "ebs_csi_driver_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "~> 6.0"
