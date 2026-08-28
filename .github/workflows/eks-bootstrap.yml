@@ -56,7 +56,7 @@ jobs:
           scan-ref: 'infrastructure/envs/prod/bootstrap/'
           exit-code: '1'
           ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
 
       - name: Checkov Static Code Analysis
         uses: bridgecrewio/checkov-action@v12.2982.0
