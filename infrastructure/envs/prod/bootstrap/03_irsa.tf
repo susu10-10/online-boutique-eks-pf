@@ -1,6 +1,6 @@
 module "alb_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name                                   = "aws-load-balancer-controller"
   attach_load_balancer_controller_policy = true
