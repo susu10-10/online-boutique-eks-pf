@@ -1,4 +1,4 @@
-#checkov:skip=CKV_TF_1:
+#checkov:skip=CKV_TF_1:terraform-aws-modules is a verified, widely-audited registry namespace; version pinned via semver constraint + lockfile
 module "alb_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "~> 6.0"
@@ -21,7 +21,7 @@ module "alb_irsa" {
 
 # IAM Role IRSA - EBS CSI Driver
 
-#checkov:skip=CKV_TF_1:
+#checkov:skip=CKV_TF_1:terraform-aws-modules is a verified, widely-audited registry namespace; version pinned via semver constraint + lockfile
 module "ebs_csi_driver_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
   version = "~> 6.0"

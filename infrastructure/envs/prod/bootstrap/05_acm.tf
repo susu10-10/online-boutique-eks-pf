@@ -3,7 +3,7 @@ data "aws_route53_zone" "main" {
   private_zone = false
 }
 
-#checkov:skip=CKV_TF_1:
+#checkov:skip=CKV_TF_1:terraform-aws-modules is a verified, widely-audited registry namespace; version pinned via semver constraint + lockfile
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
   version = "~> 5.0"

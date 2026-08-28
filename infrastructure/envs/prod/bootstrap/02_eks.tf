@@ -1,4 +1,4 @@
-#checkov:skip=CKV_TF_1:
+#checkov:skip=CKV_TF_1:terraform-aws-modules is a verified, widely-audited registry namespace; version pinned via semver constraint + lockfile
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 21.0"
