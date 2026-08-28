@@ -41,3 +41,48 @@ module "ebs_csi_driver_irsa" {
 
 }
 
+# external-dns: watches Ingress hostname annotations and writes/updates Route 53
+# records automatically. Required by cluster/main.tf's external-dns helm_release
+# without this, argocd.suworks.me (and later the boutique storefront's hostname)
+# has no way to get a DNS record without a manual aws_route53_record per app.
+
+resource "aws_iam_policy" "external_dns" {
+  name        = "${var.project_name}-external-dns-policy"
+  description = "Scoped to the suworks.me hosted zone only — least privilege, not route53:*"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["route53:ChangeResourceRecordSets"]
+        Resource = "arn:aws:route53:::hostedzone/${data.aws_route53_zone.main.zone_id}"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["route53:ListHostedZones", "route53:ListResourceRecordSets"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+module "external_dns_irsa" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "~> 5.0"
+
+  name = "external-dns"
+
+  oidc_providers = {
+    this = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:external-dns"]
+    }
+  }
+
+  policies = {
+    ExternalDnsPolicy = aws_iam_policy.external_dns.arn
+  }
+
+  tags = var.tags
+}

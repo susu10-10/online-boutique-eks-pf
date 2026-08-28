@@ -43,3 +43,8 @@ output "oidc_provider_arn" {
   description = "The ARN of the EKS OIDC Provider"
   value       = module.eks.oidc_provider_arn
 }
+
+
+output "external_dns_irsa_role_arn" {
+  value = module.external_dns_irsa.arn
+}

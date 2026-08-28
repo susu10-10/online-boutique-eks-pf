@@ -1,5 +1,9 @@
 terraform {
   required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "6.61.0"
+    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "~> 3.2.1"
@@ -13,6 +17,10 @@ terraform {
       version = "~> 1.14"
     }
   }
+}
+
+provider "aws" {
+  region = var.aws_region
 }
 
 provider "kubernetes" {
