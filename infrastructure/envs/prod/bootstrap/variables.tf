@@ -37,4 +37,3 @@ variable "aws_account_id" {
   type        = string
   default     = "767397659229"
 }
-

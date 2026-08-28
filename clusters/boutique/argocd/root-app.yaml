@@ -1,0 +1,25 @@
+# the trigger, one apply tells argocd to ready the file
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-platform-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # deltes resources if root app is deleted
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/susu10-10/online-boutique-doks-pf
+    targetRevision: main
+    path: clusters/boutique/infrastructure-apps # tells argo to scan this dir for child applications 
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc # deploys directly to the current DOKS cluster
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true # automatically deletes resources removed from git
+      selfHeal: true # automaticallys overwrites manual cluster configs drifts
+    syncOptions:
+      - CreateNamespace=true

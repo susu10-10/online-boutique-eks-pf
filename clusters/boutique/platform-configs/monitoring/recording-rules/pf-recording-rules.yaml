@@ -1,0 +1,108 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+
+metadata:
+  name: platform-recording-rules
+  namespace: prometheus
+  labels:
+    release: prometheus
+
+spec:
+  groups:
+
+  - name: platform.recording.rules
+    interval: 30s
+
+    rules:
+
+    #
+    # Cluster CPU %
+    #
+    - record: cluster:cpu_usage:percent
+      expr: |
+        100 * (
+          1 -
+          avg(rate(node_cpu_seconds_total{mode="idle"}[5m]))
+        )
+
+    #
+    # Cluster Memory %
+    #
+    - record: cluster:memory_usage:percent
+      expr: |
+        100 * (
+          1 -
+          (
+            sum(node_memory_MemAvailable_bytes)
+            /
+            sum(node_memory_MemTotal_bytes)
+          )
+        )
+
+    #
+    # Cluster Filesystem %
+    #
+    - record: cluster:filesystem_usage:percent
+      expr: |
+        100 * (
+          1 -
+          (
+            sum(node_filesystem_avail_bytes{fstype!="tmpfs"})
+            /
+            sum(node_filesystem_size_bytes{fstype!="tmpfs"})
+          )
+        )
+
+    #
+    # Pod CPU
+    #
+    - record: pod:cpu_usage:cores
+      expr: |
+        sum by(namespace,pod)(
+          rate(container_cpu_usage_seconds_total{
+            container!="",
+            image!=""
+          }[5m])
+        )
+
+    #
+    # Pod Memory
+    #
+    - record: pod:memory_usage:bytes
+      expr: |
+        sum by(namespace,pod)(
+          container_memory_working_set_bytes{
+            container!="",
+            image!=""
+          }
+        )
+
+    - record: namespace:cpu_usage:cores
+      expr: |
+        sum by(namespace)(
+          rate(container_cpu_usage_seconds_total{
+            container!="",
+            image!=""
+          }[5m])
+        )
+
+
+    - record: platform:nodes
+      expr: |
+        count(kube_node_info)
+
+    - record: platform:nodes_ready
+      expr: |
+        count(kube_node_status_condition{condition="Ready", status="true"})
+
+    - record: platform:nodes_not_ready
+      expr: |
+        count(kube_node_status_condition{condition="Ready", status="false"})
+
+    - record: platform:container_restarts
+      expr: |
+        sum(increase(kube_pod_container_status_restarts_total[5m]))
+
+    - record: platform:persistent_volumes
+      expr: |
+        count(kube_persistentvolumeclaim_info)

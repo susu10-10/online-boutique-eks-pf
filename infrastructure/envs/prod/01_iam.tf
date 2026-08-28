@@ -141,7 +141,10 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "iam:DeletePolicy", "iam:CreatePolicyVersion", "iam:DeletePolicyVersion",
           "iam:ListPolicyVersions", "iam:GetOpenIDConnectProvider", "iam:TagRole",
           "iam:CreateInstanceProfile", "iam:DeleteInstanceProfile", "iam:AddRoleToInstanceProfile",
-          "iam:RemoveRoleFromInstanceProfile", "iam:GetInstanceProfile"
+          "iam:RemoveRoleFromInstanceProfile", "iam:GetInstanceProfile",
+          "iam:CreateOpenIDConnectProvider",
+          "iam:DeleteOpenIDConnectProvider",
+          "iam:TagOpenIDConnectProvider"
         ]
         Resource = [
           "arn:aws:iam::767397659229:role/*",

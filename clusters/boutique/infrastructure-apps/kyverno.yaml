@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-controller
+  namespace: argocd # Must match the namespace where Argo CD is installed
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Enables cascading delete
+spec:
+  project: default
+  sources:
+    - repoURL: 'https://kyverno.github.io/kyverno/' # Helm registry URL
+      chart: kyverno   # Chart name
+      targetRevision: 3.8.2     # Version of the chart
+      helm:
+        valueFiles:
+          - $values/clusters/boutique/platform-configs/helm-values/kyverno.yaml
+    - repoURL: 'https://github.com/susu10-10/online-boutique-doks-pf'
+      targetRevision: main
+      ref: values
+  destination:
+    server: 'https://kubernetes.default.svc'    # Target cluster
+    namespace: kyverno                    # Target namespace
+  syncPolicy:
+    automated:
+      prune: true                               # Automatically delete removed resources
+      selfHeal: true                            # Fix configuration drift automatically
+    syncOptions:
+      - CreateNamespace=true                     # Automatically create target namespace
+      - ServerSideApply=true                     # Use server-side apply for syncing
+      - Replace=true
+
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-custom-policies
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/susu10-10/online-boutique-doks-pf'
+    targetRevision: main
+    path: 'clusters/boutique/platform-configs/kyverno/policies'
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,23 @@
+driver:
+  kind: modern_ebpf
+
+
+falco:
+  jsonOutput: true
+  jsonIncludeOutputProperty: true
+
+  stdoutOutput:
+    enabled: true
+
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+
+tty: true

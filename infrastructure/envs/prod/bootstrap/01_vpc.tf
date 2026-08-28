@@ -1,0 +1,36 @@
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 6.0"
+
+  name = "${var.project_name}-vpc-${var.environment}"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["${var.aws_region}a", "${var.aws_region}b"]
+  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
+  private_subnets = ["10.0.10.0/24", "10.0.11.0/24"]
+
+  # nat gw needed for private subnets to access the internet, like pulling helm charts etc
+  enable_nat_gateway = true
+  single_nat_gateway = true
+
+  #dns support is needed for vpc ep to be able to resolve correctly
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  # Tags ECS/ALB expect to find on the subnets for auto-discovery
+  tags = var.tags
+
+  public_subnet_tags = {
+    "kubernetes.io/role/elb"                    = "1"
+    "kubernetes.io/cluster/online-boutique-eks" = "shared"
+  }
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/online-boutique-eks" = "shared"
+  }
+}
+
+
+
+
