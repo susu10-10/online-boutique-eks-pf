@@ -49,6 +49,8 @@ jobs:
 
       - name: Run Trivy vulnerability scanner in IaC mode
         uses: aquasecurity/trivy-action@v0.36.0
+        env:
+          TRIVY_TF_EXCLUDE_DOWNLOADED_MODULES: 'true'
         with:
           scan-type: 'config'
           hide-progress: false
@@ -65,6 +67,7 @@ jobs:
           directory: infrastructure/envs/prod/bootstrap/
           framework: terraform
           soft_fail: false
+          download_external_modules: false
 
       - name: Terraform Plan
         id: plan
