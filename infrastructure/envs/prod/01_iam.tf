@@ -73,7 +73,7 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "acm:ListCertificates",
           "acm:ListTagsForCertificate",
           "route53:GetHostedZone",
-          "route53:ListHostedZones",
+          #"route53:ListHostedZones",
           "route53:ChangeResourceRecordSets",
           "route53:ListResourceRecordSets",
           "route53:GetChange"
@@ -114,7 +114,8 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "arn:aws:lambda:us-east-1:767397659229:function:*",
           "arn:aws:lambda:us-east-1:767397659229:event-source-mapping:*",
           "arn:aws:ssm:us-east-1:767397659229:parameter/online-boutique/*",
-          "arn:aws:ecr:us-east-1:767397659229:repository/*"
+          "arn:aws:ecr:us-east-1:767397659229:repository/*",
+          "arn:aws:ssm:us-east-1::parameter/aws/service/eks/*"
         ]
       },
       {

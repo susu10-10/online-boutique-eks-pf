@@ -28,7 +28,7 @@ module "eks" {
 
   # EKS Managed Node Group(s)
   eks_managed_node_groups = {
-    boutique_infrastructure = {
+    core_nodes = {
       # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["m7i-flex.large"]
