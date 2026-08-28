@@ -21,12 +21,12 @@ output "cluster_certificate_authority_data" {
 
 output "ebs_csi_driver_irsa_role_arn" {
   description = "IAM Role ARN for the EBS CSI Driver"
-  value       = module.ebs_csi_driver_irsa.iam_role_arn
+  value       = module.ebs_csi_driver_irsa.arn
 }
 
 output "aws_lb_controller_irsa_role_arn" {
   description = "IAM Role ARN for the AWS Load Balancer Controller"
-  value       = module.alb_irsa.iam_role_arn
+  value       = module.alb_irsa.arn
 }
 
 output "vpc_id" {
@@ -36,7 +36,7 @@ output "vpc_id" {
 
 output "private_subnet" {
   description = "The IDs of the private subnets"
-  value       = module.vpc.private_subnet_ids
+  value       = module.vpc.private_subnets
 }
 
 output "oidc_provider_arn" {
