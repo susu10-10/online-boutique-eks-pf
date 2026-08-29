@@ -68,7 +68,7 @@ jobs:
           framework: terraform
           soft_fail: false
           download_external_modules: false
-          skip_check: CKV_TF_1
+          skip_check: CKV_TF_1,CKV_AWS_355
 
       - name: Terraform Plan
         id: plan

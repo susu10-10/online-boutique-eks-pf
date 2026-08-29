@@ -54,13 +54,17 @@ resource "aws_iam_policy" "external_dns" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = ["route53:ChangeResourceRecordSets"]
+        Effect = "Allow"
+        Action = ["route53:ChangeResourceRecordSets",
+          "route53:ListResourceRecordSets"
+        ]
         Resource = "arn:aws:route53:::hostedzone/${data.aws_route53_zone.main.zone_id}"
       },
       {
+        #checkov:skip=CKV_AWS_355:route53:ListHostedZones does not support resource-level permissions — AWS requires Resource "*" for this specific action, per AWS's own IAM action reference. Not scopable by design, not an oversight.
+
         Effect   = "Allow"
-        Action   = ["route53:ListHostedZones", "route53:ListResourceRecordSets"]
+        Action   = ["route53:ListHostedZones"]
         Resource = "*"
       }
     ]
