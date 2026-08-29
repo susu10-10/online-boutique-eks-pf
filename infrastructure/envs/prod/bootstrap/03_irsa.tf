@@ -69,7 +69,7 @@ resource "aws_iam_policy" "external_dns" {
 
 module "external_dns_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = "external-dns"
 
