@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+  annotations:
+    # Makes this the default for any PVC that doesn't specify storageClassName —
+    # matches the implicit behavior DOKS gave you for free.
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer   # don't provision the volume until a pod is actually scheduled
+reclaimPolicy: Delete
+parameters:
+  type: gp3   # gp3, not gp2 — cheaper per-GB and higher baseline IOPS at the same cost

@@ -1,15 +1,17 @@
 name: Terraform EKS Cluster
 
 on:
-#   push:
-#     branches: [ main ]
-#     paths:
-#       - 'infrastructure/envs/prod/cluster/**'
-#       - '.github/workflows/eks-cluster.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'infrastructure/envs/prod/cluster/**'
+      - '.github/workflows/eks-cluster.yml'
+      - 'clusters/boutique/argocd/**'
   workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
+  TF_WORKING_DIR: infrastructure/envs/prod/cluster/
 
 permissions:
   id-token: write
@@ -21,7 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
     defaults:
       run:
-        working-directory: infrastructure/envs/prod/bootstrap/
+        working-directory: ${{ env.TF_WORKING_DIR }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
@@ -38,8 +40,7 @@ jobs:
           terraform_version: "1.15.6"
           
       - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
+        run: terraform fmt -check -recursive
 
       - name: Terraform Init
         run: terraform init
@@ -55,8 +56,8 @@ jobs:
           scan-type: 'config'
           hide-progress: false
           format: 'table'
-          scan-ref: 'infrastructure/envs/prod/bootstrap/'
-          skip-dirs: 'infrastructure/envs/prod/bootstrap/.terraform'
+          scan-ref: ${{ env.TF_WORKING_DIR }}
+          skip-dirs: ${{ env.TF_WORKING_DIR }}/.terraform
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL'
@@ -64,17 +65,17 @@ jobs:
       - name: Checkov Static Code Analysis
         uses: bridgecrewio/checkov-action@v12.2982.0
         with:
-          directory: infrastructure/envs/prod/bootstrap/
+          directory: ${{ env.TF_WORKING_DIR }}
           framework: terraform
           soft_fail: false
           download_external_modules: false
           skip_check: CKV_TF_1
 
       - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color
+        run: terraform plan -out-tfplan
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve tfplan
 
   

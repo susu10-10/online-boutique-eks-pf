@@ -11,7 +11,7 @@ module "acm" {
   domain_name = "*.${var.domain_name}"
   zone_id     = data.aws_route53_zone.main.zone_id
 
-  validation_method = "DNS"
+  validation_method = "DNS" # validation method for the ACM certificate
 
   subject_alternative_names = [
     var.domain_name

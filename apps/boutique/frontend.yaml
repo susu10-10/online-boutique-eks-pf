@@ -125,24 +125,24 @@ kind: ServiceAccount
 metadata:
   name: frontend
 
+
 ---
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frontend
+  namespace: boutique
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    alb.ingress.kubernetes.io/group.name: boutique-shared-alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:767397659229:certificate/7620053e-1c9a-41c9-b7c8-f27a9697d808
+    external-dns.alpha.kubernetes.io/hostname: shop.suworks.me
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - suworks.me
-        - www.suworks.me
-      secretName: boutique-tls
+  ingressClassName: alb
   rules:
-    - host: suworks.me
+    - host: shop.suworks.me
       http:
         paths:
           - path: /
@@ -152,13 +152,40 @@ spec:
                 name: frontend
                 port:
                   number: 80
-    - host: www.suworks.me
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 80
+---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: frontend
+#   annotations:
+#     cert-manager.io/cluster-issuer: letsencrypt-staging
+#     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+# spec:
+#   ingressClassName: nginx
+#   tls:
+#     - hosts:
+#         - suworks.me
+#         - www.suworks.me
+#       secretName: boutique-tls
+#   rules:
+#     - host: suworks.me
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: frontend
+#                 port:
+#                   number: 80
+#     - host: www.suworks.me
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: frontend
+#                 port:
+#                   number: 80

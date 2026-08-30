@@ -50,10 +50,11 @@ grafana:
 
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: alb
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-staging
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      alb.ingress.kubernetes.io/group.name: boutique-shared-alb
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:767397659229:certificate/7620053e-1c9a-41c9-b7c8-f27a9697d808
+      external-dns.alpha.kubernetes.io/hostname: grafana.suworks.me
     
     hosts:
       - grafana.suworks.me
