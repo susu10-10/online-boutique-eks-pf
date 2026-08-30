@@ -28,7 +28,7 @@ resource "helm_release" "aws_lb_controller" {
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
-  version    = "1.11.0"
+  version    = "3.5.0"
 
   set = [
     { name = "clusterName", value = data.terraform_remote_state.bootstrap.outputs.cluster_name },
@@ -46,7 +46,7 @@ resource "helm_release" "external_dns" {
   repository = "https://kubernetes-sigs.github.io/external-dns/"
   chart      = "external-dns"
   namespace  = "kube-system"
-  version    = "1.15.0"
+  version    = "1.21.0"
 
   set = [
     { name = "provider", value = "aws" },
@@ -67,10 +67,9 @@ resource "helm_release" "argocd" {
   version    = "10.2.1"
   namespace  = kubernetes_namespace_v1.argocd.metadata[0].name
   values = [
-    templatefile("${path.module}/../../../../clusters/boutique/argocd/values.yaml"), {
-      acm_certificate_arn = data.terraform_remote_state.bootstrap.outputs.acm_certificate_arn
-
-  }]
+  templatefile("${path.module}/../../../../clusters/boutique/argocd/values.yaml"), {
+    acm_certificate_arn = data.terraform_remote_state.bootstrap.outputs.acm_certificate_arn
+}]
 
   set = [{
     name  = "server.insecure"
