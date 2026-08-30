@@ -18,6 +18,7 @@ server:
     ingressClassName: alb
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/group.name: boutique-shared-alb
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
       alb.ingress.kubernetes.io/certificate-arn: ${acm_certificate_arn}
