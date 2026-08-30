@@ -67,9 +67,9 @@ resource "helm_release" "argocd" {
   version    = "10.2.1"
   namespace  = kubernetes_namespace_v1.argocd.metadata[0].name
   values = [
-  templatefile("${path.module}/../../../../clusters/boutique/argocd/values.yaml"), {
-    acm_certificate_arn = data.terraform_remote_state.bootstrap.outputs.acm_certificate_arn
-}]
+    templatefile("${path.module}/../../../../clusters/boutique/argocd/values.yaml"), {
+      acm_certificate_arn = data.terraform_remote_state.bootstrap.outputs.acm_certificate_arn
+  }]
 
   set = [{
     name  = "server.insecure"
