@@ -24,6 +24,25 @@ spec:
     algorithm: ECDSA
     size: 256
 ---
+
+# The Trust-Manager Bundle (Distributes the public key to Linkerd)
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: linkerd-identity-trust-roots
+spec:
+  sources:
+    - secret:
+        name: linkerd-trust-anchor
+        key: ca.crt
+  target:
+    configMap:
+      key: ca-bundle.crt
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: linkerd
+---
+
 # internal issuer to bridge the root to the identity cert
 apiVersion: cert-manager.io/v1
 kind: Issuer
