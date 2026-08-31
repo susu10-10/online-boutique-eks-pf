@@ -23,9 +23,12 @@ identityTrustDomain: cluster.local
 #   5XcMwExl/FMhao79yQTuSNS/eB1jVG5TYA+CfQda1gIgIs5dG+c/ipzv03WPe7xT
 #   idUmHrmKQ1IBt93p49n+v4A=
 #   -----END CERTIFICATE-----
-
+# ConfigMap (populated by trust-manager) instead of requiring
+# a literal identityTrustAnchorsPEM value here
 identity:
+  externalCA: true # this will # reads the trust anchor from the linkerd-identity-trust-roots
   issuer:
     scheme: kubernetes.io/tls
     tls:
       secretName: linkerd-identity-issuer
+
