@@ -58,11 +58,6 @@ grafana:
     
     hosts:
       - grafana.suworks.me
-    
-    tls:
-      - hosts:
-          - grafana.suworks.me
-        secretName: grafana-tls
 
 
 alertmanager:

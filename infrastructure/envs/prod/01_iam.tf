@@ -111,7 +111,7 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "sns:*",
           "lambda:*",
           "ssm:*",
-          "ecr:*"
+          "ecr:*",
         ]
         Resource = [
           "arn:aws:sqs:us-east-1:767397659229:*",
@@ -120,7 +120,7 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "arn:aws:lambda:us-east-1:767397659229:event-source-mapping:*",
           "arn:aws:ssm:us-east-1:767397659229:parameter/online-boutique/*",
           "arn:aws:ecr:us-east-1:767397659229:repository/*",
-          "arn:aws:ssm:us-east-1::parameter/aws/service/eks/*"
+          "arn:aws:ssm:us-east-1::parameter/aws/service/eks/*",
         ]
       },
       {
@@ -229,6 +229,13 @@ resource "aws_iam_policy" "platform_repo_policy" {
           "ssm:GetParameters"
         ]
         Resource = "arn:aws:ssm:us-east-1::parameter/aws/service/eks/optimized-ami/*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:*"
+        ]
+        Resource = "*"
       }
     ]
   })

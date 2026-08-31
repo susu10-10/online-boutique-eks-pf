@@ -21,10 +21,10 @@ server:
       alb.ingress.kubernetes.io/group.name: boutique-shared-alb
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-      alb.ingress.kubernetes.io/certificate-arn: ${acm_certificate_arn}
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:767397659229:certificate/7620053e-1c9a-41c9-b7c8-f27a9697d808
       alb.ingress.kubernetes.io/backend-protocol: HTTP
       external-dns.alpha.kubernetes.io/hostname: argocd.suworks.me
-    tls: false   # TLS terminates at the ALB, not here — matches server.insecure: true above
+    tls: false   # TLS terminates at the ALB, not here, it matches server.insecure: true above
     hosts:
       - argocd.suworks.me
   metrics:
