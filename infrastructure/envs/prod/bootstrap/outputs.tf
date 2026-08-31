@@ -46,5 +46,11 @@ output "oidc_provider_arn" {
 
 
 output "external_dns_irsa_role_arn" {
-  value = module.external_dns_irsa.arn
+  description = "IAM Role ARN for the External DNS"
+  value       = module.external_dns_irsa.arn
+}
+
+output "external_secrets_irsa_role_arn" {
+  description = "IAM Role ARN for the External Secrets"
+  value       = module.external_secrets_irsa.arn
 }

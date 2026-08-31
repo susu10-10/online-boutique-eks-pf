@@ -37,3 +37,10 @@ variable "aws_account_id" {
   type        = string
   default     = "767397659229"
 }
+
+
+variable "grafana_admin_password" {
+  description = "Grafana admin password — passed via -var in CI, sourced from GitHub Secrets"
+  type        = string
+  sensitive   = true
+}

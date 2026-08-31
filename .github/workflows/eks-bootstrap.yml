@@ -43,6 +43,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        env:
+          TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_PASSWD }}
 
       - name: Terraform Validate
         run: terraform validate
@@ -73,9 +75,15 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan -no-color
+        env:
+          TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_PASSWD }}
+
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: terraform apply -auto-approve tfplan
+        env:
+          TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_PASSWD }}
+
 
   

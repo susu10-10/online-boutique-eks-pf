@@ -90,3 +90,44 @@ module "external_dns_irsa" {
 
   tags = var.tags
 }
+
+# policy for reading secrets
+resource "aws_iam_policy" "external_secrets" {
+  name        = "${var.project_name}-external-secrets-policy"
+  description = "Read-only access to this project's Secrets Manager secrets, not secretsmanager:*"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
+        Resource = "arn:aws:secretsmanager:${var.aws_region}:*:secret:online-boutique/*"
+      }
+    ]
+  })
+}
+
+
+
+# IRSA Role for the External Secrets
+#checkov:skip=CKV_TF_1: We trust the official HashiCorp registry for AWS modules.
+module "external_secrets_irsa" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts"
+  version = "~> 6.0"
+
+  name = "external-secrets"
+
+  oidc_providers = {
+    this = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["external-secrets:external-secrets"] # this binds to the exact namespace and SA the ESO will use.
+    }
+  }
+
+  policies = {
+    ExternalSecretsPolicy = aws_iam_policy.external_secrets.arn
+  }
+
+  tags = var.tags
+}
