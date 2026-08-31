@@ -1,6 +1,5 @@
-
-#checkov:skip=CKV_AWS_149:AWS-managed key already encrypts at rest; a dedicated CMK is disproportionate for a single secret at this project's scale
-
+#checkov:skip=CKV_AWS_149: AWS-managed key already encrypts at rest
+#checkov:skip=CKV_AWS_149: dedicated CMK is disproportionate for a single secret at this project's scale
 resource "aws_secretsmanager_secret" "grafana_admin" {
   name = "online-boutique/grafana-admin"
   tags = var.tags
