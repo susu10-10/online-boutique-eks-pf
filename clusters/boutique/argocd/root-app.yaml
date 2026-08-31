@@ -15,7 +15,7 @@ spec:
     directory:
       recurse: true
   destination:
-    server: https://kubernetes.default.svc # deploys directly to the current DOKS cluster
+    server: https://kubernetes.default.svc # deploys directly to the current EKS cluster
     namespace: argocd
   syncPolicy:
     automated:
