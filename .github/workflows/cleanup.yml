@@ -56,6 +56,26 @@ jobs:
         run: kubectl delete ingress --all -A --timeout=120s
         continue-on-error: true
 
+      - name: Force delete stuck Custom Resources (ArgoCD / ApplicationCRDs)
+        run: |
+          # Target common resources that hang with finalizers
+          kubectl get applications.argoproj.io -A -o jsonpath='{.items[*].metadata.name}' | xargs -I {} kubectl patch applications.argoproj.io {} -n argocd --type merge -p '{"metadata":{"finalizers":[]}}' || true
+        continue-on-error: true
+
+      - name: Force terminate stuck namespaces
+        run: |
+          for ns in boutique platform argocd; do
+            if kubectl get ns $ns 2>/dev/null; then
+              echo "Force cleaning namespace: $ns"
+              # Delete all finalizers from resources inside the namespace
+              kubectl api-resources --verbs=merge --namespaced=true -o name | xargs -I {} kubectl patch {} --all -n $ns --type merge -p '{"metadata":{"finalizers":[]}}' || true
+              # Delete the namespace itself
+              kubectl delete ns $ns --grace-period=0 --force --timeout=10s || true
+            fi
+          done
+        continue-on-error: true
+
+
       - name: Wait for the ALB Controller to finish deprovisioning load balancers
         run: sleep 60
         continue-on-error: true
