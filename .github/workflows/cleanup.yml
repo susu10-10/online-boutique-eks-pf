@@ -1,0 +1,107 @@
+name: Terraform Destroy All
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "destroy" to confirm this deletes the EKS cluster, VPC, NAT Gateway, and every platform resource'
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Confirm destroy intent
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "destroy" ]; then
+            echo "Confirmation string did not match 'destroy'. Aborting."
+            exit 1
+          fi
+
+  cleanup-cluster-resources:
+    needs: guard
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/online-boutique-eks-github-deploy-platform-repo
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name online-boutique-eks --region ${{ env.AWS_REGION }}
+        continue-on-error: true  
+
+      - name: Delete the root Argo CD Application (cascades to all 17 child apps)
+        run: kubectl delete application root-platform-app -n argocd --timeout=180s
+        continue-on-error: true
+
+      - name: Clear a stuck finalizer if the cascade above timed out
+        run: |
+          if kubectl get application root-platform-app -n argocd 2>/dev/null; then
+            echo "root-platform-app still present clearing finalizer to unblock deletion"
+            kubectl patch application root-platform-app -n argocd --type merge -p '{"metadata":{"finalizers":[]}}'
+          fi
+        continue-on-error: true
+
+      - name: Delete any remaining Ingress objects directly (belt-and-braces for ALB cleanup)
+        run: kubectl delete ingress --all -A --timeout=120s
+        continue-on-error: true
+
+      - name: Wait for the ALB Controller to finish deprovisioning load balancers
+        run: sleep 60
+        continue-on-error: true
+
+      - name: Verify no ALBs remain tagged for this cluster
+        run: |
+          aws elbv2 describe-load-balancers --query \
+            "LoadBalancers[?contains(LoadBalancerName, 'boutique') || contains(LoadBalancerName, 'argocd')].[LoadBalancerName,State.Code]" \
+            --output table
+
+  destroy-cluster:
+    needs: cleanup-cluster-resources
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/online-boutique-eks-github-deploy-platform-repo
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.15.6"
+      - name: Terraform destroy cluster state
+        working-directory: infrastructure/envs/prod/cluster
+        run: |
+          terraform init
+          terraform destroy -auto-approve
+
+  destroy-bootstrap:
+    needs: destroy-cluster
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/online-boutique-eks-github-deploy-platform-repo
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.15.6"
+      - name: Terraform destroy bootstrap state (VPC, EKS, NAT Gateway, node group)
+        working-directory: infrastructure/envs/prod/bootstrap
+        env:
+          TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_PASSWD }}
+        run: |
+          terraform init
+          terraform destroy -auto-approve
